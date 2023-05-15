@@ -114,9 +114,10 @@ export default function CaesarSongSearch(){
         var ws = new WebSocket('wss://palondomus-caesarmusic.hf.space/caesarmusicws');
         ws.onopen = () => {
         // connection opened
-        console.log(selectedLanguage)
-        let send_data = JSON.stringify({"artist":artist.toLowerCase(),"album":album.toLowerCase(),"album_or_song":selectedLanguage})
-        console.log(send_data)
+        //console.log(selectedLanguage)
+        const albumfilt = album.includes("youtube") ? album : album.toLowerCase()
+        let send_data = JSON.stringify({"artist":artist.toLowerCase(),"album":albumfilt,"album_or_song":selectedLanguage})
+        //console.log(send_data)
         ws.send(send_data); // send a message
         };
         
