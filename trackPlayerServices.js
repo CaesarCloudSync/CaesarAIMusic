@@ -75,6 +75,7 @@ export async function addTracks() {
 
     const dir = await getAndroidDir('userDataDirectory')
     //console.log(dir)
+    console.log(dir.uri)
     const files = await ScopedStorage.listFiles(dir.uri)
     const CaesarAIMusicLogo = require('./assets/CaesarAILogo.png')
     const alltracks = files.map(function(file,idx) {

@@ -16,7 +16,7 @@ export default function Header(props) {
   async function setTrackInfo(){
     const track = await TrackPlayer.getCurrentTrack();
     const info = await TrackPlayer.getTrack(track);
-    console.log(info)
+    //console.log(info)
     setInfo(info);
   }
     useEffect(() => {
@@ -31,7 +31,7 @@ export default function Header(props) {
   
 
     const imagedim = 110
-    console.log(info)
+    //console.log(info)
     return(
       <View style={{justifyContent:"center",alignItems:"center"}}>
           <Image style={{position:"relative",top:30,width: 120,height:imagedim}} source={require("../assets/CaesarAILogo.png")}></Image>

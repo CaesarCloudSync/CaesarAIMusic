@@ -8,10 +8,11 @@ import {
   View,
 } from 'react-native';
 
-const requestCameraPermission = async () => {
+export const requestStoragePermission 
+ = async () => {
   try {
     const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
       {
         title: 'Cool Photo App Camera Permission',
         message:
@@ -35,7 +36,8 @@ const requestCameraPermission = async () => {
 const AskPermission = () => (
   <View style={styles.container}>
     <Text style={styles.item}>Try permissions</Text>
-    <Button title="request permissions" onPress={requestCameraPermission} />
+    <Button title="request permissions" onPress={requestStoragePermission 
+} />
   </View>
 );
 
