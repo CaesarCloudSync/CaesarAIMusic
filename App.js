@@ -10,7 +10,7 @@ import Header from './components/header';
 import Playlist from './components/playlist';
 import TrackProgress from './components/trackprogress';
 import CaesarSongSearch from './components/caesarsongsearch';
-
+import axios from 'axios';
 import AskPermission from './components/askpermission';
 function App() { 
 
@@ -31,7 +31,7 @@ function App() {
 
       setIsPlayerReady(isSetup);
     }
-
+  
     setup();
     //setTrackInfo()
     
