@@ -23,7 +23,7 @@ export default function Playlist(props) {
     const [isPlayerReady, setIsPlayerReady] = useState(false);
     const addToQueue = async (title,index) =>{
       //console.log(index)
-      props.nextqueue.push({title:title,index:index})
+      props.nextqueue.unshift({title:title,index:index})
       //nextqueue.push()
     } 
     
