@@ -17,6 +17,7 @@ function App() {
 
   const [seek, setSeek] = useState(0);
   const [songchanged,setSongsChanged] = useState(false);
+  const [nextqueue,setNextQueue] = useState([]);
   const [isPlayerReady, setIsPlayerReady] = useState(false);
 
   useEffect(() => {
@@ -53,10 +54,11 @@ function App() {
 
       
           
-      <Header />
+      <Header nextqueue={nextqueue} />
       <TrackProgress seek={seek} setSeek={setSeek}/>
       
-      <Playlist  seek={seek} setSeek={setSeek}/>
+      <Playlist nextqueue={nextqueue} setNextQueue={setNextQueue}  seek={seek} setSeek={setSeek}/>
+      
     </SafeAreaView>
   );
 }

@@ -14,12 +14,19 @@ import TrackPlayer, {
   State
 } from 'react-native-track-player';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import * as MIcon from 'react-native-vector-icons/MaterialIcons';
 import { setupPlayer, addTracks } from '../trackPlayerServices';
-
+import Footer from './footer';
 export default function Playlist(props) {
     const [queue, setQueue] = useState([]);
     const [currentTrack, setCurrentTrack] = useState(0);
     const [isPlayerReady, setIsPlayerReady] = useState(false);
+    const addToQueue = async (title,index) =>{
+      //console.log(index)
+      props.nextqueue.push({title:title,index:index})
+      //nextqueue.push()
+    } 
+    
   
     async function loadPlaylist() {
       const queue = await TrackPlayer.getQueue();
@@ -31,9 +38,26 @@ export default function Playlist(props) {
       loadPlaylist();
     }, [isPlayerReady]);
   
-    useTrackPlayerEvents([Event.PlaybackTrackChanged], (event) => {
+    useTrackPlayerEvents([Event.PlaybackTrackChanged], async (event) => {
+  
       if(event.state == State.nextTrack) {
-        TrackPlayer.getCurrentTrack().then((index) => setCurrentTrack(index));
+        if (props.nextqueue.length > 0){
+          if (props.seek){
+          let lastTrack = props.nextqueue.pop().index
+          let currentTrack = await TrackPlayer.getCurrentTrack()
+          let duration = await TrackPlayer.getDuration()
+          //console.log(props.seek,duration)   
+          props.setSeek(0)
+          TrackPlayer.skip(lastTrack,currentTrack);
+          TrackPlayer.seekTo(0)
+          setCurrentTrack(currentTrack)
+          }
+        }
+        else{
+          props.setSeek(0)
+          TrackPlayer.getCurrentTrack().then((index) => setCurrentTrack(index));
+      }
+      
       }
     });
   
@@ -45,11 +69,19 @@ export default function Playlist(props) {
   
       return (
         <TouchableOpacity onPress={handleItemPress}>
-          <Text
-            style={{...styles.playlistItem,
-              ...{backgroundColor: isCurrent ? '#666' : 'transparent'}}}>
-          {title}
-          </Text>
+          <View style={{display:"flex",flexDirection:"row"}}>
+            <Text 
+              style={{...styles.playlistItem,flex:1,
+                ...{backgroundColor: isCurrent ? '#666' : 'transparent'}}}>
+            {title}
+            </Text>
+            <MIcon.Button 
+                name={"queue-music"}
+                size={18}
+                backgroundColor="transparent"
+                onPress={()=>{addToQueue(title,index)}}
+            ></MIcon.Button>
+          </View>
         </TouchableOpacity>
       );
     }
@@ -64,6 +96,7 @@ export default function Playlist(props) {
     }
     async function setupReset() {
       let isSetup = await setupPlayer();
+      props.setNextQueue([])
       await TrackPlayer.reset()
       //const queue = await TrackPlayer.getQueue();
       await addTracks();
@@ -74,7 +107,7 @@ export default function Playlist(props) {
   
     return(
       <View style={{flex:1}}>
-        <Controls setSeek={props.setSeek} onShuffle={handleShuffle}/>
+        <Controls nextqueue={props.nextqueue} setSeek={props.setSeek} onShuffle={handleShuffle}/>
         <View style={styles.playlist}>
           <Button title='Change Songs' onPress={setupReset}></Button>
           <FlatList
@@ -86,6 +119,7 @@ export default function Playlist(props) {
             }
           />
         </View>
+        <Footer nextqueue={props.nextqueue} currentTrack={currentTrack} isPlayerReady={isPlayerReady} ></Footer>
         
       </View>
     );
@@ -106,7 +140,25 @@ export default function Playlist(props) {
         TrackPlayer.play();
       }
     }
-  
+    
+    async function handleSkip(nextqueue){
+      if (nextqueue.length != 0){
+        
+        let lastTrack = nextqueue.pop().index
+        let currentTrack = await TrackPlayer.getCurrentTrack()
+        setSeek(0)
+        TrackPlayer.skip(lastTrack,currentTrack);
+        TrackPlayer.seekTo(0)
+        
+
+      }
+      else{
+        TrackPlayer.skipToNext();setSeek(0)
+      }
+
+      
+
+    }
     return(
       <View style={{flexDirection: 'row',
         flexWrap: 'wrap', alignItems: 'center',justifyContent:"center"}}>
@@ -124,7 +176,7 @@ export default function Playlist(props) {
             name="arrow-right"
             size={28}
             backgroundColor="transparent"
-            onPress={() => {TrackPlayer.skipToNext();setSeek(0)}}/>
+            onPress={() => {handleSkip(props.nextqueue)}}/>
           <Icon.Button
             name="random"
             size={28}
