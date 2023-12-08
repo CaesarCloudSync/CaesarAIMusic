@@ -39,26 +39,56 @@ export default function Playlist(props) {
     }, [isPlayerReady]);
   
     useTrackPlayerEvents([Event.PlaybackTrackChanged], async (event) => {
-  
-      if(event.state == State.nextTrack) {
+      //LOG  {"nextTrack": 1, "position": 248.849, "track": 0, "type": "playback-track-changed"}
+      if(event.state == State.nextTrack || event.state === undefined) {
         if (props.nextqueue.length > 0){
+ 
           if (props.seek){
-          let lastTrack = props.nextqueue.pop().index
-          let currentTrack = await TrackPlayer.getCurrentTrack()
-          let duration = await TrackPlayer.getDuration()
-          //console.log(props.seek,duration)   
-          props.setSeek(0)
-          TrackPlayer.skip(lastTrack,currentTrack);
-          TrackPlayer.seekTo(0)
-          setCurrentTrack(currentTrack)
+            let lastTrack = props.nextqueue.pop().index
+            let currentTrack = await TrackPlayer.getCurrentTrack()
+            let duration = await TrackPlayer.getDuration()
+            props.setSeek(0)
+            TrackPlayer.skip(lastTrack,currentTrack);
+            TrackPlayer.seekTo(0)
+            setCurrentTrack(currentTrack)
           }
-        }
+          else{
+            props.setSeek(0)
+            TrackPlayer.getCurrentTrack().then((index) => setCurrentTrack(index));
+          }
+
+          }
         else{
           props.setSeek(0)
           TrackPlayer.getCurrentTrack().then((index) => setCurrentTrack(index));
       }
       
       }
+    });
+    useTrackPlayerEvents([Event.RemoteNext], async (event) => {
+      if(event.state == State.nextTrack || event.state === undefined) {
+        if (props.nextqueue.length > 0){
+ 
+            let lastTrack = props.nextqueue.pop().index
+            let currentTrack = await TrackPlayer.getCurrentTrack()
+            let duration = await TrackPlayer.getDuration()
+            //console.log(props.seek,duration)   
+            props.setSeek(0)
+            TrackPlayer.skip(lastTrack,currentTrack);
+            
+            TrackPlayer.seekTo(0)
+            setCurrentTrack(currentTrack)
+            TrackPlayer.play()
+          
+
+          }
+        else{
+          props.setSeek(0)
+          TrackPlayer.getCurrentTrack().then((index) => setCurrentTrack(index));
+      }
+      
+      }
+
     });
   
     function PlaylistItem({index, title, isCurrent}) {

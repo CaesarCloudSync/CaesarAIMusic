@@ -117,4 +117,6 @@ export async function playbackService() {
     console.log('Event.RemotePrevious');
     TrackPlayer.skipToPrevious();
   });
+  TrackPlayer.addEventListener(Event.PlaybackTrackChanged,() => {
+  })
 }
