@@ -47,7 +47,7 @@ export default function BottomModal({ nextqueue,currentTrack,isPlayerReady ,togg
             <View style={styles.barIcon} />
             <Text style={styles.text}>CaesarAIMusic Queue</Text>
             <FlatList
-            data={nextqueue.reverse()}
+            data={nextqueue.slice().reverse()}
             renderItem={({item, index}) => 
             <QueuedItem item={item} index={index}/>
             }

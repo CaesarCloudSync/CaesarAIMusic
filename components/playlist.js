@@ -21,6 +21,7 @@ export default function Playlist(props) {
     const [queue, setQueue] = useState([]);
     const [currentTrack, setCurrentTrack] = useState(0);
     const [isPlayerReady, setIsPlayerReady] = useState(false);
+    const [isplayingqueue,setISPlayingQueue] = useState(true);
     const addToQueue = async (title,index) =>{
       //console.log(index)
       props.nextqueue.unshift({title:title,index:index})
@@ -40,6 +41,9 @@ export default function Playlist(props) {
   
     useTrackPlayerEvents([Event.PlaybackTrackChanged], async (event) => {
       //LOG  {"nextTrack": 1, "position": 248.849, "track": 0, "type": "playback-track-changed"}
+      console.log(event)
+      console.log(props.nextqueue)
+      console.log(props.seek)
       if(event.state == State.nextTrack || event.state === undefined) {
         if (props.nextqueue.length > 0){
  
@@ -51,10 +55,22 @@ export default function Playlist(props) {
             TrackPlayer.skip(lastTrack,currentTrack);
             TrackPlayer.seekTo(0)
             setCurrentTrack(currentTrack)
+            setISPlayingQueue(true)
           }
           else{
+            console.log("hi")
+            if (isplayingqueue === true){
             props.setSeek(0)
-            TrackPlayer.getCurrentTrack().then((index) => setCurrentTrack(index));
+            let lastTrack = props.nextqueue.pop().index
+            setCurrentTrack(lastTrack)
+            TrackPlayer.skip(lastTrack,currentTrack);
+            TrackPlayer.seekTo(0)
+            setISPlayingQueue(false)
+          }
+          else{
+            setISPlayingQueue(true)
+          }
+            //TrackPlayer.getCurrentTrack().then((index) => setCurrentTrack(index));
           }
 
           }
