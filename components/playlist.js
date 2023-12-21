@@ -22,6 +22,7 @@ export default function Playlist(props) {
     const [currentTrack, setCurrentTrack] = useState(0);
     const [isPlayerReady, setIsPlayerReady] = useState(false);
     const [isplayingqueue,setISPlayingQueue] = useState(true);
+    const [isplayingqueuemanual,setISPlayingQueueManual] = useState(true);
     const addToQueue = async (title,index) =>{
       //console.log(index)
       props.nextqueue.unshift({title:title,index:index})
@@ -48,6 +49,7 @@ export default function Playlist(props) {
         if (props.nextqueue.length > 0){
  
           if (props.seek){
+            if (isplayingqueuemanual === true && isplayingqueue !== true){
             let lastTrack = props.nextqueue.pop().index
             let currentTrack = await TrackPlayer.getCurrentTrack()
             let duration = await TrackPlayer.getDuration()
@@ -55,16 +57,21 @@ export default function Playlist(props) {
             TrackPlayer.skip(lastTrack,currentTrack);
             TrackPlayer.seekTo(0)
             setCurrentTrack(currentTrack)
-            setISPlayingQueue(true)
+            setISPlayingQueueManual(false)
+            }
+            else{
+            setISPlayingQueueManual(true)
+          }
           }
           else{
             console.log("hi")
-            if (isplayingqueue === true){
+            if (isplayingqueue === true || isplayingqueuemanual !== true){
             props.setSeek(0)
             let lastTrack = props.nextqueue.pop().index
-            setCurrentTrack(lastTrack)
             TrackPlayer.skip(lastTrack,currentTrack);
+            
             TrackPlayer.seekTo(0)
+            setCurrentTrack(lastTrack)
             setISPlayingQueue(false)
           }
           else{
