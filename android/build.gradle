@@ -6,6 +6,8 @@ buildscript {
         minSdkVersion =  21  // 25
         compileSdkVersion = 33
         targetSdkVersion = 31
+        androidXAnnotation = "1.2.0"
+        androidXBrowser = "1.3.0"
 
         if (System.properties['os.arch'] == "aarch64") {
             // For M1 Users we need to use the NDK 24 which added support for aarch64

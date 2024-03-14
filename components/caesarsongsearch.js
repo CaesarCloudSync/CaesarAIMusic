@@ -14,6 +14,10 @@ import { FFmpegKit } from 'ffmpeg-kit-react-native';
 import RNFetchBlob from 'rn-fetch-blob'
 import { requestStoragePermission } from "./askpermission";
 import ytpl from "react-native-ytpl"
+import { Linking } from 'react-native'
+import InAppBrowser from 'react-native-inappbrowser-reborn';
+import { Pressable } from "react-native";
+import { Image } from "react-native";
 export default function CaesarSongSearch(){
     const [youtubeurl,setYouTubeURL] = useState("")
     const [selectedLanguage, setSelectedLanguage] = useState("album");
@@ -32,6 +36,31 @@ export default function CaesarSongSearch(){
           <ActivityIndicator style={{position:"relative",top:40,right:7}} size="large" color="blue" />
             </View>
         );
+    }
+    async function openLink() {
+      try {
+        const isAvailable = await InAppBrowser.isAvailable()
+        const url = 'https://youtube.com'
+        if (isAvailable) {
+          InAppBrowser.open(url, {
+            // iOS Properties
+            dismissButtonStyle: 'cancel',
+            preferredBarTintColor: 'gray',
+            preferredControlTintColor: 'white',
+            // Android Properties
+            showTitle: true,
+            toolbarColor: '#6200EE',
+            secondaryToolbarColor: 'black',
+            enableUrlBarHiding: true,
+            enableDefaultShare: true,
+            forceCloseOnRedirection: true,
+          }).then((result) => {
+            //Alert.alert(JSON.stringify(result))
+          })
+        } else Linking.openURL(url)
+      } catch (error) {
+        Alert.alert(error.message)
+      }
     }
 
     async function addSong(url) {
@@ -99,7 +128,6 @@ export default function CaesarSongSearch(){
         console.log("hi")
         const plid = ytpl.getPlaylistID(youtubeurlnotm)
         const playlist = await ytpl(plid["_j"]);
-        
         playlist.items.map(async (video) => {
           let url = video.shortUrl
           //console.log(url)
@@ -128,6 +156,7 @@ export default function CaesarSongSearch(){
         <Text style={{position:"relative",top:5}}>
         {progressmeessage}
         </Text>
+        
         {showSearch === true &&
         <View>
         <SearchBar
@@ -135,11 +164,21 @@ export default function CaesarSongSearch(){
         placeholder="Enter Youtube URL:"
         onChangeText={setYouTubeURL}
         value={youtubeurl}/>
+          
+         
  
 
 
-            {downloading === false ? <Icon.Button  onPress={addSongs}>Download</Icon.Button>:
+            {downloading === false ?
+            <View style={{display:"flex",flexDirection:"row"}}>
+             <Pressable style={{flex:1,display:"flex",justifyContent:"center",alignItems:"center",backgroundColor:"#2188dd",height:40,borderBottomLeftRadius:5}} onPress={addSongs}>
+              <Text style={{color:"white"}}>Download</Text>
+              </Pressable>
+              <Pressable onPress={() =>{openLink()}} >
+            <Image  style={{position:"relative",top:0.3,backgroundColor:"red",height:40}} source={require("../assets/Youtube_logo.png")}></Image>
+            </Pressable></View>:
             <ActivityIndicator style={{marginTop:10}}></ActivityIndicator>}
+
             
             
             </View>}
