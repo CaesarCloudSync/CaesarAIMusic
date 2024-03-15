@@ -138,6 +138,7 @@ export default function CaesarSongSearch(){
 
       
         await addSong(youtubeurlnotm)
+        setDownloading(false)
     
     
       }
