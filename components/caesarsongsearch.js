@@ -18,6 +18,7 @@ import { Linking } from 'react-native'
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import { Pressable } from "react-native";
 import { Image } from "react-native";
+import axios from "axios";
 export default function CaesarSongSearch(){
     const [youtubeurl,setYouTubeURL] = useState("")
     const [selectedLanguage, setSelectedLanguage] = useState("album");
@@ -125,11 +126,16 @@ export default function CaesarSongSearch(){
         if (youtubeurlnotm.includes("list=")){
         //const id = ytdl.ge
         //https://www.youtube.com/watch?v=UU_aEa8K-EOJ3D6gOs7HcyNg
-        console.log("hi")
-        const plid = ytpl.getPlaylistID(youtubeurlnotm)
-        const playlist = await ytpl(plid["_j"]);
-        playlist.items.map(async (video) => {
-          let url = video.shortUrl
+        //const plid = ytpl.getPlaylistID(youtubeurlnotm)
+        //const playlist = await ytpl(plid["_j"]);
+        youtubeurlnotm = youtubeurlnotm.includes("playlist") ? youtubeurlnotm: "https://www.youtube.com/playlist" + "?" + youtubeurlnotm.split("?")[1].split("&")[1]// https://www.youtube.com/playlist?list=
+
+        const response = await axios.get(`https://caesariytplaylistms-qqbn26mgpa-uc.a.run.app/v1/getplaylisturls?url=${youtubeurlnotm}`)
+        let result = response.data
+        //console.log(result)
+        let video_urls = result.video_urls
+        video_urls.map(async (url) => {
+
           //console.log(url)
           await addSong(url)
         })
