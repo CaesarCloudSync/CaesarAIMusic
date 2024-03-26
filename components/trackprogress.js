@@ -23,7 +23,7 @@ export default function TrackProgress(props) {
     }
   
     return(
-      <View style={{alignItems:"center",justifyContent:"center"}}>
+      <View style={{alignItems:"center",justifyContent:"center",marginTop:5}}>
         <Text style={styles.trackProgress}>
           { format(position) } / { format(duration) }
         </Text>

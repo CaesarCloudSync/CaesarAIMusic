@@ -16,7 +16,7 @@ export default function Footer({ nextqueue,currentTrack,isPlayerReady }){
       };
 
     return (
-    <View style={{justifyContent:"flex-end",alignItems:"flex-end"}}>
+    <View style={{justifyContent:"flex-end",alignItems:"flex-end",height:10}}>
   
         <MIcon.Button 
                 style={{marginRight:0}}

@@ -3,6 +3,7 @@ import {
   SafeAreaView,
   StyleSheet,
   ActivityIndicator,
+  View,
 } from 'react-native';
 import TrackPlayer from 'react-native-track-player';
 import { setupPlayer, addTracks } from './trackPlayerServices';
@@ -51,11 +52,14 @@ function App() {
     <SafeAreaView style={{flex:1}}>
       {/*<AskPermission/>*/}
       <CaesarSongSearch/>
+      <View style={{height:250}}>
+      <Header nextqueue={nextqueue} />
+      <TrackProgress seek={seek} setSeek={setSeek}/>
+      </View>
 
       
           
-      <Header nextqueue={nextqueue} />
-      <TrackProgress seek={seek} setSeek={setSeek}/>
+
       
       <Playlist nextqueue={nextqueue} setNextQueue={setNextQueue}  seek={seek} setSeek={setSeek}/>
       
